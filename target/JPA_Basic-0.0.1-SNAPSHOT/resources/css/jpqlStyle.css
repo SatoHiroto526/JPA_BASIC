@@ -1,0 +1,18 @@
+      /* 初期状態ではフォームを非表示にする */
+      #addForm {
+        display: none;
+      }
+      #addComfirm {
+        display: none;
+      }
+
+      #updateForm {
+        display: none;
+      }
+      #updateComfirm {
+        display: none;
+      }
+      
+      #deleteComfirm {
+        display: none;
+      }

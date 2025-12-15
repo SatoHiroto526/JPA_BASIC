@@ -104,7 +104,7 @@ public class Jpql {
         String sql = " SELECT t.id, t.todo, t.priority, t.detail, a.userId, a.username, "
                     + " RANK() OVER (PARTITION BY a.userId ORDER BY t.id) AS userrank " 
                     + " FROM jakartaee.Todo t INNER JOIN jakartaee.Account a ON t.userId = a.userId ";
-        // 戻り値はDtoのList型、creatNativeQueryの第二引数に円てぃてに付与した@SqlResultSetMappingの名前をセット
+        // 戻り値はDtoのList型、creatNativeQueryの第二引数にエンティティに付与した@SqlResultSetMappingの名前をセット
         return (List<TodoDto>)em.createNativeQuery(sql, "TodoDtoMapping").getResultList();
     }
 

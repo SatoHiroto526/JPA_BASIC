@@ -28,3 +28,35 @@ INSERT INTO jakartaee.todo(id, todo, priority, detail,userid) VALUES(4, 'コン�
 INSERT INTO jakartaee.todo(id, todo, priority, detail,userid) VALUES(5, 'k8sの勉強', '中', 'kubernetesの勉強', 2);
 INSERT INTO jakartaee.todo(id, todo, priority, detail,userid) VALUES(6, 'EJB', '低', 'JakartaEEにおけるEJBの実装方法勉強', 2);
 END;
+
+CREATE TABLE jakartaee.listA (
+    id INTEGER NOT NULL,
+    data VARCHAR(50) NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE jakartaee.listB (
+    id INTEGER NOT NULL,
+    data VARCHAR(50) NOT NULL,
+    PRIMARY KEY(id, data)
+);
+
+BEGIN;
+TRUNCATE TABLE jakartaee.listA;
+INSERT INTO jakartaee.listA(id, data) VALUES(1, 'A');
+INSERT INTO jakartaee.listA(id, data) VALUES(2, 'B');
+INSERT INTO jakartaee.listA(id, data) VALUES(3, 'C');
+END;
+
+BEGIN;
+TRUNCATE TABLE jakartaee.listB;
+INSERT INTO jakartaee.listB(id, data) VALUES(1, 'A-1');
+INSERT INTO jakartaee.listB(id, data) VALUES(1, 'A-2');
+INSERT INTO jakartaee.listB(id, data) VALUES(1, 'A-3');
+INSERT INTO jakartaee.listB(id, data) VALUES(2, 'B-1');
+INSERT INTO jakartaee.listB(id, data) VALUES(2, 'B-2');
+INSERT INTO jakartaee.listB(id, data) VALUES(2, 'B-3');
+INSERT INTO jakartaee.listB(id, data) VALUES(3, 'C-1');
+INSERT INTO jakartaee.listB(id, data) VALUES(3, 'C-2');
+INSERT INTO jakartaee.listB(id, data) VALUES(3, 'C-3');
+END;

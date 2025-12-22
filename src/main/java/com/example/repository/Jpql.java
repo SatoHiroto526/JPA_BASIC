@@ -38,6 +38,8 @@ public class Jpql {
     public Todo findById(int id) {
         // パラメータとして埋め込む部分は「:変数名」で設定
         // SELECT句でt.id、t.detail...のように指定するとエラーになるため、エンティティのエイリアスのみ指定
+        // ⇒SELECT句には戻り値として設定したエンティティのクラス（のエイリアス）を指定⇒指定しないとキャストできないのでClassCastException
+        // カスタムが必要な場合はコンストラクタ式を使う。
         String jpql = " SELECT t "
                     + " FROM Todo t INNER JOIN t.account a "
                     + " WHERE t.id = :id ";
@@ -57,7 +59,7 @@ public class Jpql {
 
         // @ManyToOn等でリレーションは記述しているためONは書かない。
         // ONで結合条件をかけないため、どうしても必要な場合はネイティブクエリを使う。
-        String jpql = " SELECT t " 
+        String jpql = " SELECT t  " 
                     + " FROM Todo t INNER JOIN t.account a "
                     + " ORDER BY t.id ";
 
@@ -104,7 +106,7 @@ public class Jpql {
         String sql = " SELECT t.id, t.todo, t.priority, t.detail, a.userId, a.username, "
                     + " RANK() OVER (PARTITION BY a.userId ORDER BY t.id) AS userrank " 
                     + " FROM jakartaee.Todo t INNER JOIN jakartaee.Account a ON t.userId = a.userId ";
-        // 戻り値はDtoのList型、creatNativeQueryの第二引数に円てぃてに付与した@SqlResultSetMappingの名前をセット
+        // 戻り値はDtoのList型、creatNativeQueryの第二引数にエンティティに付与した@SqlResultSetMappingの名前をセット
         return (List<TodoDto>)em.createNativeQuery(sql, "TodoDtoMapping").getResultList();
     }
 

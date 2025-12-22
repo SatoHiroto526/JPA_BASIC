@@ -1,8 +1,11 @@
 package com.example.convert;
 
 import com.example.dto.AccountDto;
+import com.example.dto.ListDto;
 import com.example.dto.TodoDto;
 import com.example.entity.Account;
+import com.example.entity.ListA;
+import com.example.entity.ListB;
 import com.example.entity.Todo;
 
 import jakarta.enterprise.context.Dependent;
@@ -74,6 +77,34 @@ public class Convert {
         todo.setAccount(account);
 
         return todo;
+    }
+
+    public ListDto convertListAtToListDto(ListA listA) {
+        ListDto dto = new ListDto();
+        dto.setId(listA.getId());
+        dto.setData(listA.getData());
+        return dto;
+    }
+
+    public ListDto convertListBToListDto(ListB listB) {
+        ListDto dto = new ListDto();
+        dto.setId(listB.getId());
+        dto.setData(listB.getData());
+        return dto;
+    }
+
+    public ListA cnvertListDtoToListA(ListDto dto) {
+        ListA listA = new ListA();
+        listA.setId(dto.getId());
+        listA.setData(dto.getData());
+        return listA;
+    }
+
+    public ListB cnvertListDtoToListB(ListDto dto) {
+        ListB listB = new ListB();
+        listB.setId(dto.getId());
+        listB.setData(dto.getData());
+        return listB;
     }
     
 }

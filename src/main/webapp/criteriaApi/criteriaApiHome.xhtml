@@ -27,7 +27,7 @@
                                     itemValue="#{a.id}"
                                     itemLabel="#{a.data}" />
             <!-- id="listBを再描画" -->
-            <f:ajax event="change" listener="#{criteriaApiBackingBean.getListBByIdd}" render="listB" />
+            <f:ajax event="change" listener="#{criteriaApiBackingBean.getListBById}" render="listB" />
         </h:selectOneMenu><br /><br />
 
         <h:outputLabel for="listB" value="選択肢B：" /><br />
@@ -41,6 +41,124 @@
         <h:commandButton value="追加" action="#{criteriaApiBackingBean.printSelectedId}" />
         
     </h:form>
+
+    <br /><br />
+    <h3>あいまい検索（Like）</h3>
+    <table id="like" border="1">
+      <tr>
+        <th>id</th>
+        <th>data</th>
+      </tr>
+      <ui:repeat var="row" value="#{criteriaApiBackingBean.listBLike}">
+        <tr>
+          <td><h:outputText value="#{row.id}" /></td>
+          <td><h:outputText value="#{row.data}" /></td>
+        </tr>
+      </ui:repeat>
+    </table>
+
+    <br /><br />
+    <h3>複数項目の検索（IN）</h3>
+    <table id="in" border="1">
+      <tr>
+        <th>id</th>
+        <th>data</th>
+      </tr>
+      <ui:repeat var="row" value="#{criteriaApiBackingBean.listBIn}">
+        <tr>
+          <td><h:outputText value="#{row.id}" /></td>
+          <td><h:outputText value="#{row.data}" /></td>
+        </tr>
+      </ui:repeat>
+    </table>
+
+    <br /><br />
+    <h3>Between</h3>
+    <table id="between" border="1">
+      <tr>
+        <th>id</th>
+        <th>data</th>
+      </tr>
+      <ui:repeat var="row" value="#{criteriaApiBackingBean.listBBetween}">
+        <tr>
+          <td><h:outputText value="#{row.id}" /></td>
+          <td><h:outputText value="#{row.data}" /></td>
+        </tr>
+      </ui:repeat>
+    </table>
+
+    <br /><br />
+    <h3>複数条件検索（AND）</h3>
+    <table id="or" border="1">
+      <tr>
+        <th>id</th>
+        <th>data</th>
+      </tr>
+      <ui:repeat var="row" value="#{criteriaApiBackingBean.listBAnd}">
+        <tr>
+          <td><h:outputText value="#{row.id}" /></td>
+          <td><h:outputText value="#{row.data}" /></td>
+        </tr>
+      </ui:repeat>
+    </table>
+
+    <br /><br />
+    <h3>Order By</h3>
+    <table id="order" border="1">
+      <tr>
+        <th>id</th>
+        <th>data</th>
+      </tr>
+      <ui:repeat var="row" value="#{criteriaApiBackingBean.listBOrder}">
+        <tr>
+          <td><h:outputText value="#{row.id}" /></td>
+          <td><h:outputText value="#{row.data}" /></td>
+        </tr>
+      </ui:repeat>
+    </table>
+
+    <br /><br />
+    <h3>Join（内部結合）</h3>
+    <table id="join" border="1">
+        <tr>
+            <th>TodoID</th>
+            <th>Todo</th>
+            <th>優先度</th>
+            <th>詳細</th>
+            <th>割当先ユーザーID</th>
+            <th>割当先ユーザー名</th>
+        </tr>
+        <ui:repeat var="row" value="#{criteriaApiBackingBean.todoListJoin}">
+            <tr>
+                <td><h:outputText value="#{row.id}" /></td>
+                <td><h:outputText value="#{row.todo}" /></td>
+                <td><h:outputText value="#{row.priority}" /></td>
+                <td><h:outputText value="#{row.detail}" /></td>
+                <td><h:outputText value="#{row.accountDto.userId}" /></td>
+                <td><h:outputText value="#{row.accountDto.username}" /></td>
+            </tr>
+        </ui:repeat>
+    </table>
+
+    <h3>集約関数利用</h3>
+    <table id="aggregateByUserId" border="1">
+        <tr>
+            <th>割当先ユーザーID</th>
+            <th>割当先ユーザー名</th>
+            <th>ユーザー別最小TodoID</th>
+            <th>ユーザー別最大TodoID</th>
+            <th>ユーザー別Todo合計</th>
+        </tr>
+        <ui:repeat var="row" value="#{criteriaApiBackingBean.todoListAggregate}">
+            <tr>
+                <td><h:outputText value="#{row.accountDto.userId}" /></td>
+                <td><h:outputText value="#{row.accountDto.username}" /></td>
+                <td><h:outputText value="#{row.min}" /></td>
+                <td><h:outputText value="#{row.max}" /></td>
+                <td><h:outputText value="#{row.count}" /></td>
+            </tr>
+        </ui:repeat>
+    </table>
 
   </h:body>
 </html>

@@ -9,7 +9,7 @@
   <!--warパッケージング用-->
   <packaging>war</packaging>
 
-  <name>JSF_Basic</name>
+  <name>JPA_Basic</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 

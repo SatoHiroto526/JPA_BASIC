@@ -15,6 +15,14 @@ import jakarta.persistence.TypedQuery;
 // JPQL：Java Persistence Query Language
 // SQLはデータベースへのクエリを記述するが、JPQLはエンティティへのクエリを記述する。
 // JPQLの基本構文：SELECT [取得するエンティティ or 式] FROM [エンティティクラス名] [エイリアス]
+
+// 基本的な方針を考えてみた。
+// エンティティには必ず@Table、@Column、@JoinColumnを明記
+// エンティティに記述するリレーションは@ManyToOne
+// 優先度はJPQL（エンティティにマッピング⇒DTOにコンバート）>コンストラクタ式>ネイティブSQL
+// エンティティ全体ではなく、カラムを明示してSELECTしたい場合はコンストラクタ式を使う。
+// ネイティブSQLを使うサイナ@SqlResultSetMappingと@ConstructorResultでDTOのコンストラクタにマッピング
+// N + 1問題があるため、なるべくJOINフェッチ使う。
 @RequestScoped
 public class Jpql {
 
@@ -26,7 +34,7 @@ public class Jpql {
     // >
     // >=
 
-    // その他BETWEENやIN、IN NULLやNOT、LIKE等も標準SQLと同じように使用可能
+    // その他BETWEENやIN、IS NULLやNOT、LIKE等も標準SQLと同じように使用可能
 
     // エンティティマネージャクラスのフィールドには@PersistenceContextを付与
     @PersistenceContext
@@ -60,8 +68,25 @@ public class Jpql {
         // @ManyToOn等でリレーションは記述しているためONは書かない。
         // ONで結合条件をかけないため、どうしても必要な場合はネイティブクエリを使う。
         String jpql = " SELECT t  " 
-                    + " FROM Todo t INNER JOIN t.account a "
+                    + " FROM Todo t INNER JOIN FETCH t.account "
                     + " ORDER BY t.id ";
+        
+        // フェッチ：取得するエンティティにリレーションが定義されている場合、リレーション先のエンティティをどのタイミングでデータベースから
+        // 取得するかを決めることができる。これをフェッチ戦略と呼ぶ。
+        // 設定可能なフェッチ戦略は以下3つ。
+        // ①Eagerフェッチ：@OneToOne、@ManyToOneのデフォルトのフェッチ戦略。
+        //  @ManyToOne(fetch = FetchType.EAGER)で明示可能
+        //  エンティティを取得する際に、リレーション先のエンティティもそれぞれ取得する。
+        //  ⇒TodoとAccountの場合、それぞれを取得するために2回クエリを発行する。
+        // ②Lazyフェッチ：@OneToMany、@ManyToManyのデフォルトのフェッチ戦略。
+        //  @ManyToOne(fetch = FetchType.LAZY)で明示可能
+        //  取得処理時にリレーション構築は行わず、リレーション先に初めてアクセスする際にエンティティを取得する。
+        // ③JOINフェッチ：結合元／結合先エンティティを一撃で取得する。（1発のクエリで済む。）
+        //  構文は以下。
+        //  [INNER][LEFT OUTER] JOIN FETCH リレーションのフィールと エイリアス
+        //  JOINフェッチを使う際は、リレーション先となるフィールドにはエイリアスを付けない
+        //  例）FROM Todo t INNER JOIN FETCH t.account ⇒OK、FROM Todo t INNER JOIN FETCH t.account a ⇒NG
+        //  ※コンストラクタ式を使う場合はそもそもフェッチという概念がないため注意！
 
         // 複数件取得する場合はgetResultListメソッドを使用
         return em.createQuery(jpql, Todo.class).getResultList();

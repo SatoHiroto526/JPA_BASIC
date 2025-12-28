@@ -48,7 +48,7 @@ public class TodoDto {
         this.count = count;
     }
 
-    // ンネイティブクエリ用コンストラクタ
+    // ネイティブクエリ用コンストラクタ
     // useWindowFunctionメソッド用
     public TodoDto(int id,
                 String todo,

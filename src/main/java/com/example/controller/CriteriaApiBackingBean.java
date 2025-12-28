@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.service.CriteriaApiService;
 import com.example.dto.ListDto;
+import com.example.dto.TodoDto;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
@@ -27,6 +28,20 @@ public class CriteriaApiBackingBean implements Serializable {
 
     private int listBId;
 
+    private List<ListDto> listBLike;
+
+    private List<ListDto> listBIn;
+
+    private List<ListDto> listBBetween;
+
+    private List<ListDto> listBAnd;
+
+    private List<ListDto> listBOrder;
+
+    private List<TodoDto> todoListJoin;
+
+    private List<TodoDto> todoListAggregate;
+
     @Inject
     private CriteriaApiService service;
 
@@ -34,6 +49,13 @@ public class CriteriaApiBackingBean implements Serializable {
     public void init () {
         getListAAll();
         getListBAll();
+        getListBByLike();
+        getListBByIn();
+        getListBByBetween();
+        getListBByAnd();
+        getListBByOrder();
+        getListByJoin();
+        getListByAggregate();
     }
 
     public void getListAAll() {
@@ -44,7 +66,7 @@ public class CriteriaApiBackingBean implements Serializable {
         this.listB = service.getListBAll();
     }
 
-    public void getListBByIdd() {
+    public void getListBById() {
         this.listB = service.getListBByIdd(listAId);
     }
 
@@ -52,5 +74,33 @@ public class CriteriaApiBackingBean implements Serializable {
         System.out.println("listAId：" + listAId);
         System.out.println("listBId：" + listBId);
     }
-    
+
+    public void getListBByLike() {
+        this.listBLike = service.getListBByLike();
+    }
+
+    public void getListBByIn() {
+        this.listBIn = service.getListBByIn();
+    }
+
+    public void getListBByBetween() {
+        this.listBBetween = service.getListBByBetween();
+    }
+
+    public void getListBByAnd() {
+        this.listBAnd = service.getListBByAnd();
+    }
+
+    public void getListBByOrder() {
+        this.listBOrder = service.getListBByOrder();
+    }
+
+    public void getListByJoin() {
+        this.todoListJoin = service.getListByJoin();
+    }
+
+    public void getListByAggregate() {
+        this.todoListAggregate = service.getListByAggregate();
+    }
+
 }

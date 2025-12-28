@@ -150,19 +150,33 @@ public class Jpql {
 
     // UPDATE用
     public int updateTodo(Todo todo) {
-        return em.createNamedQuery("todo.update")
+        int result = em.createNamedQuery("todo.update")
                                 .setParameter("todo", todo.getTodo())
                                 .setParameter("priority", todo.getPriority())
                                 .setParameter("account", todo.getAccount())
                                 .setParameter("id", todo.getId())
                                 .executeUpdate();
+        // JPQL UPDATEではエンティティマネージャにはupdateが反映されず、永続化コンテキスト由来の不整合が発生する可能性があるため明示的にクリアする。
+        // ただし、キャッシュは消えてしまう。
+        // また、コミット前にクリアすると変更がDBに反映されないため明示的にflushしては反映したうえでclearする。
+        // mergeメソッドの使用も検討
+        em.flush();
+        em.clear();
+        return result;
     }
 
     // DELETE用
     public int deleteTodo(int id) {
-        return em.createNamedQuery("todo.delete")
+        int result = em.createNamedQuery("todo.delete")
                     .setParameter("id", id)
                     .executeUpdate();
+        // JPQL DELETEではエンティティマネージャにはdeleteが反映されず、永続化コンテキスト由来の不整合が発生する可能性があるため明示的にクリアする。
+        // ただし、キャッシュは消えてしまう。
+        // また、コミット前にクリアすると変更がDBに反映されないため明示的にflushしては反映したうえでclearする。
+        // removeメソッドの使用も検討
+        em.flush();
+        em.clear();
+        return result;
     }
 
 

@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Table(name = "listA")
 @Getter
 @Setter
+@EqualsAndHashCode(of = {"id"})
 public class ListA implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,18 +28,5 @@ public class ListA implements Serializable {
 
     // 引数なしコンストラクタ
     public ListA() {}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ListA)) return false;
-        ListA other = (ListA) o;
-        return id == other.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(id);
-    }
     
 }

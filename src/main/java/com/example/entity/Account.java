@@ -10,6 +10,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +25,7 @@ import lombok.Setter;
         )
     }
 )
+@EqualsAndHashCode(of = {"userId"})
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,27 +46,5 @@ public class Account implements Serializable {
     // 多対一の場合：@ManyToOne
     // 多対多の場合：@ManyToMany 
     // 一対一の場合：@OneToOne
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + userId;
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Account other = (Account) obj;
-        if (userId != other.userId)
-            return false;
-        return true;
-    }
 
 }

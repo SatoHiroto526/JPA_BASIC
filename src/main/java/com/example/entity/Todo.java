@@ -15,6 +15,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -58,6 +59,9 @@ import lombok.Setter;
         }
     )
 )
+// エンティティに必須のhashcodeとequalsを自動生成するLombokのアノテーション
+// ※対象は@Idを付与したフィールドのみなので必ずof = {""}で@Idを付与したフィールドを指定
+@EqualsAndHashCode(of = {"id"})
 public class Todo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -101,26 +105,5 @@ public class Todo implements Serializable {
     
     // エンティティクラスでは、@Idを定義したフィールドを使用してhashCode()とequals()をオーバーライドしなければならない。
     // 基本的には自動生成されたコードを使用すれば良い。
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + id;
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Todo other = (Todo) obj;
-        if (id != other.id)
-            return false;
-        return true;
-    }
     
 }

@@ -1,13 +1,13 @@
 package com.example.entity;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,10 +17,12 @@ import lombok.Setter;
 @IdClass(ListBId.class)
 @Getter
 @Setter
+@EqualsAndHashCode(of = {"id", "data"})
 public class ListB implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
+    // @IdClassで主キークラス指定した場合でも、@Idは必須。
     @Id
     @Column(name="id")
     private int id;
@@ -30,19 +32,4 @@ public class ListB implements Serializable {
     private String data;
 
     public ListB() {}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ListB)) return false;
-        ListB other = (ListB) o;
-        return id == other.id &&
-               Objects.equals(data, other.data);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, data);
-    }
-
 }

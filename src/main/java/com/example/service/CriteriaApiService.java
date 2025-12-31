@@ -13,8 +13,10 @@ import com.example.repository.CriteriaApi;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
+@Transactional
 public class CriteriaApiService {
 
     @Inject

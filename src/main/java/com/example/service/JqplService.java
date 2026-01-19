@@ -61,6 +61,10 @@ public class JqplService {
         return jpql.useWindowFunction();
     }
 
+    public List<TodoDto> useWindowFunction2() {
+        return jpql.useWindowFunction2();
+    }
+
     public void insertTodo(TodoDto todoDto) {
         jpql.insertTodo(convert.convertTodoDtoToEntity(todoDto));
     }
@@ -71,6 +75,20 @@ public class JqplService {
 
     public void deleteTodo(int id) {
         logger.info(jpql.deleteTodo(id) + "件のTodoを削除しました。");
+    }
+
+    public void managerUpdate(){
+        jpql.managerUpdate();
+    }
+
+    public AccountDto successGetSingle() {
+        Account account = jpql.successGetSingle().orElse(new Account());
+        return convert.convertAccountEntityToDto(account);
+    }
+
+    public AccountDto failGetSingle() {
+        Account account = jpql.failGetSingle().orElse(new Account());
+        return convert.convertAccountEntityToDto(account);
     }
 
     public List<AccountDto> getAccountList() {

@@ -38,7 +38,14 @@ public class JpqlBackingBean implements Serializable {
     // useWindowFunctionメソッド用
     private List<TodoDto> useWindowFunction;
 
+    // useWindowFunction2メソッド用
+    private List<TodoDto> useWindowFunction2;
+
     private List<AccountDto> getAccountList;
+
+    private AccountDto successDto;
+
+    private AccountDto failDto;
 
     @Inject
     private ExternalContext externalContext;
@@ -50,12 +57,18 @@ public class JpqlBackingBean implements Serializable {
         AccountDto accountDto = new AccountDto();
         todoDto.setAccountDto(accountDto);
 
+        this.successDto = new AccountDto();
+        this.failDto = new AccountDto();
+
         // 初期表示用
         this.getList = service.getList();
         this.getListByNamedQuery = service.getListByNamedQuery();
         this.aggregateByUserId = service.aggregateByUserId();
         this.useWindowFunction = service.useWindowFunction();
+        this.useWindowFunction2 = service.useWindowFunction2();
         this.getAccountList = service.getAccountList();
+        this.successDto = service.successGetSingle();
+        this.failDto = service.failGetSingle();
     }
 
     public void findById() {
@@ -77,6 +90,12 @@ public class JpqlBackingBean implements Serializable {
 
     public String deleteTodo() {
         service.deleteTodo(todoDto.getId());
+        init();
+        return "/queryApi/jpqlHome.xhtml";
+    }
+
+    public String managerUpdate() {
+        service.managerUpdate();
         init();
         return "/queryApi/jpqlHome.xhtml";
     }

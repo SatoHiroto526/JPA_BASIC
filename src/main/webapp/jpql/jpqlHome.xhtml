@@ -262,5 +262,51 @@
         </ui:repeat>
     </table>
 
+    <br /><br />
+
+    <h3>JPA×ネイティブSQL×ウィンドウ関数②</h3>
+    <h:outputText value="#{jpqlBackingBean.useWindowFunction2.size()}件のレコード" /><br />
+    <table id="useWindowFunction2" border="1">
+        <tr>
+            <th>TodoID</th>
+            <th>Todo</th>
+            <th>優先度</th>
+            <th>詳細</th>
+            <th>割当先ユーザーID</th>
+            <th>割当先ユーザー名</th>
+            <th>ユーザー別タスクランク</th>
+        </tr>
+        <ui:repeat var="row" value="#{jpqlBackingBean.useWindowFunction2}">
+            <tr>
+                <td><h:outputText value="#{row.id}" /></td>
+                <td><h:outputText value="#{row.todo}" /></td>
+                <td><h:outputText value="#{row.priority}" /></td>
+                <td><h:outputText value="#{row.detail}" /></td>
+                <td><h:outputText value="#{row.accountDto.userId}" /></td>
+                <td><h:outputText value="#{row.accountDto.username}" /></td>
+                <td><h:outputText value="#{row.userrank}" /></td>
+            </tr>
+        </ui:repeat>
+    </table>
+
+    <br /><br />
+
+    <h3>SELECT（マネージド状態）⇒UPDATE</h3>
+    <h:form>
+        <h:commandButton value="更新" action="#{jpqlBackingBean.managerUpdate()}" />
+    </h:form>
+
+    <br /><br />
+
+    <h3>悲観ロックと安全な1件検索</h3>
+    <h4>取得成功パターン</h4>
+    <h:outputText value="#{jpqlBackingBean.successDto.userId}" />
+    <h:outputText value="#{jpqlBackingBean.successDto.username}" />
+
+    <br />
+    <h4>取得失敗パターン</h4>
+    <h:outputText value="#{jpqlBackingBean.failDto.userId}" />
+    <h:outputText value="#{jpqlBackingBean.failDto.username}" />
+
   </h:body>
 </html>

@@ -1,6 +1,7 @@
 package com.example.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.example.dto.TodoDto;
 import com.example.entity.Account;
@@ -8,7 +9,9 @@ import com.example.entity.Todo;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 // JPQLを用いた永続化
@@ -135,6 +138,29 @@ public class Jpql {
         return (List<TodoDto>)em.createNativeQuery(sql, "TodoDtoMapping").getResultList();
     }
 
+    // ネイティブSQLを使う場合②
+    public List<TodoDto> useWindowFunction2() {
+        // ネイティブSQL（ウィンドウ関数）
+        String sql = " SELECT t.id, t.todo, t.priority, t.detail, a.userId, a.username, "
+                    + " RANK() OVER (PARTITION BY a.userId ORDER BY t.id) AS userrank " 
+                    + " FROM jakartaee.Todo t INNER JOIN jakartaee.Account a ON t.userId = a.userId "
+                    + " WHERE a.userId = :userId ";
+
+        // Query生成
+        Query query = em.createNativeQuery(sql, "TodoDtoMapping");
+
+        // パラメーターセット
+        query.setParameter("userId", 1);
+
+        // ② SQL実行
+        List<?> result = query.getResultList();
+
+        // ③ DTO型へキャスト
+        List<TodoDto> todoList = (List<TodoDto>) result;
+
+        return todoList;
+    }
+
     // INSERTはINSERT文を書かず、persistメソッドを使うのが正解らしい
     public void insertTodo(Todo todo) {
         // idは最大値+1、存在しなければ1をセットする。
@@ -179,6 +205,53 @@ public class Jpql {
         return result;
     }
 
+    // マネージド状態のエンティティをSetterで更新し、そのままトランザクション終了までもっていくことで更新
+    // 画面で編集して更新する場合、デタッチドのエンティティを使うことになるためmerge()メソッドでマネージドにして更新
+    // SELECT⇒UPDATEの場合、SELECTの時点でマネージドになるためmerge()は不要
+    public void managerUpdate() {
+        // JPQLでマネージド状態にする。
+        Account account = em.createQuery(" SELECT a FROM Account a WHERE a.userId = :userId ", Account.class)
+                            .setParameter("userId", 1)
+                            .getSingleResult();
+
+        // Setterで更新
+        account.setUsername("佐藤");
+
+        // トランザクション終了時にDBに反映
+
+    }
+
+    // 安全な1件取得：取得できる場合
+    public Optional<Account> successGetSingle() {
+        List<Account> list = em.createQuery(" SELECT a FROM Account a WHERE a.userId = :userId ", Account.class)
+                            .setParameter("userId", 1)
+                            // 悲観ロックをかける
+                            .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                            .getResultList();
+        
+        if(list.size() == 0) {
+            return Optional.empty();
+        } else {
+            return Optional.of(list.get(0));
+        }
+        
+    }
+
+    // 安全な1件取得：取得できない場合
+    public Optional<Account> failGetSingle() {
+        List<Account> list = em.createQuery(" SELECT a FROM Account a WHERE a.userId = :userId ", Account.class)
+                            // 悲観ロックをかける
+                            .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                            .setParameter("userId", 100)
+                            .getResultList();
+        
+        if(list.size() == 0) {
+            return Optional.empty();
+        } else {
+            return Optional.of(list.get(0));
+        }
+        
+    }
 
     // Account取得用
     public List<Account> getAccountList() {
